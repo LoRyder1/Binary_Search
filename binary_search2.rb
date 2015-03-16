@@ -70,32 +70,57 @@ class Array
   end
 end
 
+class Array
+  def it_bindex element, lower = 0, upper = length - 1
+    while upper >= lower
+      mid = (upper + lower) / 2
+      if self[mid] < element
+        lower = mid + 1
+      elsif self[mid] > element
+        upper = mid - 1
+      else
+        return mid
+      end
+    end
+
+    return nil
+  end
+end
+
 require 'benchmark/ips'
 
-# Benchmark.ips do |r|
-#   array = (1..100).to_a
+Benchmark.ips do |r|
+  array = (1..100).to_a
 
-#   r.report 'binary' do
-#     array.bindex 25
-#     array.bindex 75
-#   end
+  r.report 'binary' do
+    array.bindex 25
+    array.bindex 75
+  end
 
-#   r.report 'rindex' do
-#     array.rindex 25
-#     array.rindex 75
-#   end
+  r.report 'it_bindex' do
+  	array.it_bindex 25
+  	array.it_bindex 75
+  end
 
-#   r.report 'index' do
-#     array.index 25
-#     array.index 75
-#   end
-# end
+  r.report 'rindex' do
+    array.rindex 25
+    array.rindex 75
+  end
 
-diamonds = (1..100000000).to_a
-puts "Bindex"
-puts Benchmark.measure { diamonds.bindex 75000000 }
-puts "Index"
-puts Benchmark.measure { diamonds.index 75000000 }
+  r.report 'index' do
+    array.index 25
+    array.index 75
+  end
+
+end
+
+# diamonds = (1..100_000_000).to_a
+# puts "Bindex"
+# puts Benchmark.measure { diamonds.bindex 75000000 }
+# puts "Iterative Bindex"
+# puts Benchmark.measure { diamonds.it_bindex 75000000 }
+# puts "Index"
+# puts Benchmark.measure { diamonds.index 75000000 }
 
 # diamonds = [] #my bowl of diamonds
 
